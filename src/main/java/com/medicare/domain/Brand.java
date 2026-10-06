@@ -3,7 +3,6 @@ package com.medicare.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,28 +15,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="admins")
+@Table(name="brands")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Admin {
-
+public class Brand {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private String firstName;
-	private String lastName;
 	
-	@Column(unique=true,nullable=false)
-	private String email;
-	private String password;
+	private String name;
+	private String description;
 	
-	@OneToMany(mappedBy = "admin")
-	private List<Prescription> prescriptions = new ArrayList<>();
-	
-	
-	
-	
-	
+	//one brand can have many medicines
+	@OneToMany(mappedBy="brand")
+	private List<Medicine> medicines = new ArrayList<>();
+
 }
