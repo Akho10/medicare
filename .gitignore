@@ -1,0 +1,17 @@
+#Angular generated files
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+#Spring boot generated files
+medicare-backend/target/
+
+#environment variables
+.env
+.env.*
+!.env.example
+
+#ide
+.idea/
+.DS_Store
+Thumbs.db
