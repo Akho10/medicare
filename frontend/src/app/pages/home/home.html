@@ -1,0 +1,76 @@
+<nav class="" navbar-expand-lg navbar-light bg-white border-bottom>
+    <div class="container">
+        <a class="navbar-brand" fw-bold text-primary routerLink="/">Medicare</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+            aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span></button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/medicines">Medicines</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/user-login">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-grow-1">
+    <section class="container py-5">
+        <div class="row align-items-center min-vh-50">
+            <div class="col-md-7">
+                <h1 class="display-5 fw-bold">Better health, Better life</h1>
+                <p class="lead mt-3">Browse medicines, view prescriptions and manage your health n one place.</p>
+
+                <a routerLink="/medicines" class="btn btn-primary btn-lg mt-3 me-2">Browse Medicines</a>
+
+                <a routerLink="/user-login" class="btn btn-outline-primary btn-lg mt-3">Login</a>
+            </div>
+
+            <div class="col-md-5 mt-4 mt-md-0">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h4>Get started</h4>
+                        <p>Create an account to access your prescriptions and orders</p>
+
+                        <a routerLink="/user-register" class="btn btn-primary w-100 mb-3">Create Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<footer class="bg-light text-black nt-5">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <h5>Medicare</h5>
+                <p class="text-dark mb-0">Better health, better life</p>
+            </div>
+
+            <div class="col-md-3 col-6 mb-3">
+                <h6>User</h6>
+                <a routerLink="/user-login" class="d-block text-black-50 mb-2">Login</a>
+                <a routerLink="/user-register" class="d-block text-black-50 mb-2">Register</a>
+            </div>
+
+             <div class="col-md-3 col-6 mb-3">
+                <h6>Admin</h6>
+                <a routerLink="/admin-login" class="d-block text-black-50 mb-2">Login</a>
+                <a routerLink="/admin-register" class="d-block text-black-50 mb-2">Register</a>
+            </div>
+        </div>
+        <hr class="border-secondary">
+
+        <p class="text-center text-black-50 small mb-0">© 2026 Medicare </p>
+    </div>
+</footer>
