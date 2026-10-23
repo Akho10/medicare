@@ -1,6 +1,7 @@
 package com.medicare.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import com.medicare.service.PaymentService;
 
 @RestController
 @RequestMapping("/payment")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PaymentController {
 
 	@Autowired
@@ -27,9 +29,9 @@ public class PaymentController {
 
 	@PutMapping
 	public Payment failedPayment(@RequestBody Payment payment) {
-		
+
 		return paymentService.failedPayment(payment);
-				
+
 	}
 
 }
