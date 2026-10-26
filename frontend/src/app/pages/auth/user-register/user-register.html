@@ -1,1 +1,84 @@
-<p>user-register works!</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class col-md-7 col-lg-6>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+
+                    <h2 class="text-center fw-bold mb-2">Create an account
+
+                    </h2>
+
+                    <div *ngIf="message" class="alert alert-success"> {{message}}</div>
+                    <div *ngIf="errorMessage" class="alert alert-danger"> {{errorMessage}}</div>
+
+                    <form #registerForm="ngForm" (ngSubmit)="register()">
+
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" id="firstName" name="firstName" class="form-control"
+                                [(ngModel)]="user.firstName" #firstName="ngModel" required maxlength="50"
+                                autocomplete="given-name" placeholder="Enter first name">
+
+                            <small *ngIf="firstName.invalid && firstName.touched" class="text-danger">First name is
+                                required.</small>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" class="form-control"
+                                [(ngModel)]="user.lastName" #lastName="ngModel" required maxlength="50"
+                                autocomplete="family-name" placeholder="Enter last name ">
+
+                            <small *ngIf="lastName.invalid && lastName.touched" class="text-danger">Last name is
+                                required.</small>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" [(ngModel)]="user.email"
+                                #email="ngModel" required maxlength="50" autocomplete="email"
+                                placeholder="Enter email address">
+
+                            <small *ngIf="email.invalid && email.touched" class="text-danger">Enter valid email
+                                address.</small>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" [(ngModel)]="user.phone"
+                                #phone="ngModel" required maxlength="50" autocomplete="tel"
+                                placeholder="Enter phone number">
+
+                            <small *ngIf="phone.invalid && phone.touched" class="text-danger">Phone number is required.</small>
+                        </div>
+
+                                 <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" name="password" class="form-control" [(ngModel)]="user.password"
+                                #password="ngModel" required minlength="8" autocomplete="new-password"
+                                placeholder="Enter password">
+                                <small class="text-secondary">Useat least 8 characters.</small>
+
+                            <small *ngIf="password.invalid && password.touched" class="text-danger">Password number is required.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="confirmPassword" class="form-abel">Confrim Password</label>
+                            <input type="passwod" id="confirmPassword" name="confirmPassword" class="form-control"
+                            [(ngModel)]="confirmPassword" #confirm="ngModel" required autocomplete="new-password" placeholder="Enter password again">
+                            <small *ngIf="confirm.touched && confirmPassword !== user.password" class="text-danger"Passwords do not match></small>
+                        </div>
+                        <button type="submit" class="btn vbtn-prmary w-100" [disabled]="loading"> {{loading ? 'Registered...' : 'Create Account'}}</button>
+
+                        <div *ngIf="registerForm.invalid && registerForm.touched" class="text-danger text-center mt-2">Please complete all requored fields correctly.</div>
+
+                    </form>
+                    <p class="text-center mt-4 mb-0">Already have na account? <a routerLink="/user-login" class="text-primary fw-semibold">Log in</a></p>
+                    <p class="text-center mt-3 mb-0"><a routerLink="/" class="text-secondary text-decoration-none">Back To Home</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
