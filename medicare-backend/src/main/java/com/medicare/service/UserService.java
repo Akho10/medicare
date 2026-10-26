@@ -13,52 +13,51 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	//register
+
+	// register
 	public User registerUser(User user) {
-		
-		if(user.getEmail() == null) {
+
+		if (user.getEmail() == null) {
 			throw new RuntimeException("User already exists.");
 		}
 		return userRepository.save(user);
 	}
-	
-	//findById
+
+	// findById
 	public User findUserById(long id) {
 		return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 	}
-	
-	//findByEmail/login
+
+	// findByEmail/login
 	public User findByEmailAndPassword(String email, String password) {
-		
+
 		User user = userRepository.findByEmail(email);
-		
-		if(user.getEmail().equals(email)) {
+
+		if (user == null) {
 			throw new RuntimeException("User not found.");
 		}
-		
-		if(!user.getPassword().equals(password)) {
+
+		if (!user.getPassword().equals(password)) {
 			throw new RuntimeException("Incorrect password.");
 		}
-		
+
 		return user;
 	}
-	
-	//update profile/user
-	public User updateProfile(long id,User user) {
-		User u =findUserById(id);
+
+	// update profile/user
+	public User updateProfile(long id, User user) {
+		User u = findUserById(id);
 		u.setFirstName(user.getFirstName());
 		u.setLastName(user.getLastName());
 		u.setPhone(user.getPhone());
-		
+
 		return userRepository.save(user);
-		
-		
+
 	}
-	
-	//listAll
-	public List<User> findAllUsers(){
+
+	// listAll
+	public List<User> findAllUsers() {
 		return userRepository.findAll();
 	}
-	
+
 }

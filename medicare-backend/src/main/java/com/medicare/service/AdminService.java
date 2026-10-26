@@ -15,59 +15,57 @@ public class AdminService {
 
 	@Autowired
 	private AdminRepository adminRepository;
-	
-	
-	//register
+
+	// register
 	public Admin registerAdmin(Admin admin) {
-		
-		if(admin.getEmail() == null) {
+
+		if (admin.getEmail() == null) {
 			throw new RuntimeException("User already exists.");
 		}
 		return adminRepository.save(admin);
 	}
-	
-	//findById
+
+	// findById
 	public Admin findAdminById(long id) {
 		return adminRepository.findById(id).orElseThrow(() -> new RuntimeException("Admin not found"));
 	}
-	
-	//findByEmail/login
+
+	// findByEmail/login
 	public Admin findByEmail(String email, String password) {
-		
+
 		Admin admin = adminRepository.findByEmail(email);
-		
-		if(admin.getEmail().equals(email)) {
+
+		if (admin == null) {
 			throw new RuntimeException("Admin not found.");
 		}
-		
-		if(!admin.getPassword().equals(password)) {
+
+		if (!admin.getPassword().equals(password)) {
 			throw new RuntimeException("Incorrect password.");
 		}
-		
+
 		return admin;
 	}
-	
-	//update profile/admin
-	public Admin updateProfile(long id,Admin admin) {
-		Admin a =findAdminById(id);
+
+	// update profile/admin
+	public Admin updateProfile(long id, Admin admin) {
+		Admin a = findAdminById(id);
 		a.setFirstName(admin.getFirstName());
 		a.setLastName(admin.getLastName());
-		
+
 		return adminRepository.save(admin);
-		
-		
+
 	}
-	
-	//changePassword
+
+	// changePassword
 	public Admin changePassowrd(long id, String oldPassword, String newPassword) {
-		Admin a =findAdminById(id);
-		
-		if(!a.getPassword().equals(oldPassword)) {
+		Admin a = findAdminById(id);
+
+		if (!a.getPassword().equals(oldPassword)) {
 			throw new RuntimeException("Incorrect old password");
-			
+
 		}
 		a.setPassword(newPassword);
 		return adminRepository.save(a);
 	}
-	
+
 }

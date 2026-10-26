@@ -27,7 +27,7 @@ public class BrandController {
 	private BrandService brandService;
 
 	@PostMapping("/add")
-	public Brand addSymptom(@RequestBody Brand brand) {
+	public Brand addBrand(@RequestBody Brand brand) {
 		return brandService.addBrand(brand);
 	}
 

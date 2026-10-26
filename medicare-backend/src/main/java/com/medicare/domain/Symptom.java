@@ -3,6 +3,8 @@ package com.medicare.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,9 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
-@Table(name="symptoms")
+@Table(name = "symptoms")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,10 +29,10 @@ public class Symptom {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private String name;
-	
+
+	@JsonIgnore
 	@ManyToMany(mappedBy = "symptoms")
 	private List<Medicine> medicines = new ArrayList<>();
-
 
 	public long getId() {
 		return id;
@@ -48,6 +49,5 @@ public class Symptom {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
 }

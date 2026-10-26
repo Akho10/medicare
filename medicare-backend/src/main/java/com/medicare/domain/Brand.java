@@ -3,6 +3,8 @@ package com.medicare.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,23 +16,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="brands")
+@Table(name = "brands")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Brand {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	private String name;
 	private String description;
-	
-	//one brand can have many medicines
-	@OneToMany(mappedBy="brand")
+
+	// one brand can have many medicines
+	@JsonIgnore
+	@OneToMany(mappedBy = "brand")
 	private List<Medicine> medicines = new ArrayList<>();
-	
 
 	public long getId() {
 		return id;
@@ -63,7 +65,5 @@ public class Brand {
 	public void setMedicines(List<Medicine> medicines) {
 		this.medicines = medicines;
 	}
-	
-	
 
 }
