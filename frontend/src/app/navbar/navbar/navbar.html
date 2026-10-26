@@ -1,0 +1,91 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold text-primary" routerLink="/">
+            Medicare
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+
+            <ul class="navbar-nav me-auto">
+
+                <!-- Admin navigation -->
+                <ng-container *ngIf="role === 'ADMIN'">
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/admin-dashboard">Admin Dashboard</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/manage-brands">Brands</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/manage-symptoms">Symptoms</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/manage-medicines">Medicines</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/manage-prescriptions">Prescriptions</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/manage-payments">Payments</a>
+                    </li>
+
+                </ng-container>
+
+                <!-- User navigation -->
+                <ng-container *ngIf="role === 'USER'">
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/user-dashboard">Dashboard</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/medicine-list">Medicines</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/my-prescriptions">My Prescriptions</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/my-orders">My Orders</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/user-profile">My Profile</a>
+                    </li>
+
+                </ng-container>
+
+            </ul>
+
+            <!-- Logout button -->
+            <button
+                *ngIf="role === 'ADMIN' || role === 'USER'"
+                class="btn btn-outline-primary"
+                type="button"
+                (click)="logout()">
+                Logout
+            </button>
+
+        </div>
+    </div>
+</nav>
