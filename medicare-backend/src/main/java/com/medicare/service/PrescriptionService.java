@@ -20,38 +20,50 @@ public class PrescriptionService {
 
 	@Autowired
 	private PrescriptionRepository prescriptionRepository;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private AdminService adminService;
-	
+
 	@Autowired
 	private MedicineService medicineService;
-	
+
 	// add
 	public Prescription addPrescription(long userId, long adminId, List<PrescriptionItem> items, String instructions) {
-		//for a user, by admin
+		// for a user, by admin
 		User user = userService.findUserById(userId);
-		
+
 		Admin admin = adminService.findAdminById(adminId);
-		
+
+		if (items == null || items.isEmpty()) {
+			throw new RuntimeException(
+					"A prescription must contain at least one medicine.");
+		}
+
 		Prescription prescription = new Prescription();
 		prescription.setUser(user);
 		prescription.setAdmin(admin);
-		prescription.setPrescriptionItems(items);
+		// prescription.setPrescriptionItems(items);
 		prescription.setInstructions(instructions);
 		prescription.setStatus(PrescriptionStatus.PENDING);
-		
-		//check if prescription item exists
-		for(PrescriptionItem item: items) {
-			Medicine medicine= medicineService.findMedicineById(item.getMedicine().getId());
-			
+
+		// check if prescription item exists
+		for (PrescriptionItem item : items) {
+			if (item.getMedicine() == null ||
+					item.getMedicine().getId() <= 0) {
+				throw new RuntimeException(
+						"Please select a valid medicine.");
+			}
+			Medicine medicine = medicineService.findMedicineById(item.getMedicine().getId());
+
 			item.setMedicine(medicine);
 			item.setPrescription(prescription);
 		}
-		
+
+		prescription.setPrescriptionItems(items);
+
 		return prescriptionRepository.save(prescription);
 	}
 
@@ -59,9 +71,9 @@ public class PrescriptionService {
 	public Prescription findPrescriptionById(long id) {
 		return prescriptionRepository.findById(id).orElseThrow(() -> new RuntimeException("Prescription not found"));
 	}
-	
-	//findUserPrescripiton
-	public List<Prescription> findUserPrescription(long userId){
+
+	// findUserPrescripiton
+	public List<Prescription> findUserPrescription(long userId) {
 		return prescriptionRepository.findByUserId(userId);
 	}
 
@@ -69,21 +81,23 @@ public class PrescriptionService {
 	public List<Prescription> findAllPrescriptions() {
 		return prescriptionRepository.findAll();
 	}
+
 	// delete
 	public void deletePrescription(long id) {
 		prescriptionRepository.deleteById(id);
 	}
-	
-	//APPROVE
+
+	// APPROVE
 	public Prescription approvePrescription(long id) {
-		
+
 		Prescription prescription = findPrescriptionById(id);
 		prescription.setStatus(PrescriptionStatus.APPROVED);
 		return prescriptionRepository.save(prescription);
 	}
-	//REJECT
+
+	// REJECT
 	public Prescription rejectPrescription(long id) {
-		
+
 		Prescription prescription = findPrescriptionById(id);
 		prescription.setStatus(PrescriptionStatus.REJECTED);
 		return prescriptionRepository.save(prescription);
