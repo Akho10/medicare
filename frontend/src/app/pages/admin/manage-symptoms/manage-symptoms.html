@@ -1,1 +1,79 @@
-<p>manage-symptoms works!</p>
+<div class="container py-4">
+
+  <h2 class="mb-4">Manage Symptoms</h2>
+
+  <div *ngIf="message" class="alert alert-success">
+    {{ message }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Add Symptom -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      Add New Symptom
+    </div>
+
+    <div class="card-body">
+      <form (ngSubmit)="addSymptom()" #symptomForm="ngForm">
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Symptom Name</label>
+
+          <input
+            id="name"
+            type="text"
+            class="form-control"
+            name="name"
+            [(ngModel)]="symptom.name"
+            placeholder="e.g. Headache"
+            required>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="symptomForm.invalid">
+          Add Symptom
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- List Symptoms -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      All Symptoms
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Symptom Name</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of symptoms">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+          </tr>
+
+          <tr *ngIf="symptoms.length === 0">
+            <td colspan="2" class="text-center py-3">
+              No symptoms to display.
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+</div>
