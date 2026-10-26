@@ -1,1 +1,261 @@
-<p>manage-medicines works!</p>
+<div class="container py-4">
+
+  <h2 class="mb-4">Manage Medicines</h2>
+
+  <div *ngIf="message" class="alert alert-success">
+    {{ message }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Add Medicine -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      Add New Medicine
+    </div>
+
+    <div class="card-body">
+      <form (ngSubmit)="addMedicine()" #medicineForm="ngForm">
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Medicine Name</label>
+          <input
+            id="name"
+            type="text"
+            class="form-control"
+            name="name"
+            [(ngModel)]="medicine.name"
+            required>
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            id="description"
+            class="form-control"
+            name="description"
+            rows="2"
+            [(ngModel)]="medicine.description">
+          </textarea>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input
+              id="price"
+              type="number"
+              class="form-control"
+              name="price"
+              [(ngModel)]="medicine.price"
+              min="0"
+              step="0.01"
+              required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="quantity" class="form-label">Quantity in Stock</label>
+            <input
+              id="quantity"
+              type="number"
+              class="form-control"
+              name="quantity"
+              [(ngModel)]="medicine.quantity"
+              min="0"
+              step="1"
+              required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="brand" class="form-label">Brand</label>
+          <select
+            id="brand"
+            class="form-select"
+            name="brand"
+            [(ngModel)]="selectedBrandId"
+            required>
+
+            <option [ngValue]="null" disabled>Select a brand</option>
+
+            <option *ngFor="let brand of brands" [ngValue]="brand.id">
+              {{ brand.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Symptoms</label>
+
+          <div *ngIf="symptoms.length === 0" class="text-muted">
+            No symptoms available. Add symptoms first.
+          </div>
+
+          <div class="symptom-list">
+            <div *ngFor="let symptom of symptoms" class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [id]="'symptom-' + symptom.id"
+                [checked]="selectedSymptomIds.includes(symptom.id)"
+                (change)="toggleSymptom(
+                  symptom.id,
+                  $any($event.target).checked
+                )">
+
+              <label
+                class="form-check-label"
+                [for]="'symptom-' + symptom.id">
+                {{ symptom.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-check mb-3">
+          <input
+            id="prescriptionNeeded"
+            type="checkbox"
+            class="form-check-input"
+            name="prescriptionNeeded"
+            [(ngModel)]="medicine.prescriptionNeeded">
+
+          <label for="prescriptionNeeded" class="form-check-label">
+            Prescription required
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="medicineForm.invalid">
+          Add Medicine
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Search Medicines -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5>Search Medicines</h5>
+
+      <form (ngSubmit)="searchMedicines()">
+
+        <div class="row g-2 align-items-end">
+
+          <div class="col-md-3">
+            <label for="searchType" class="form-label">Search By</label>
+
+            <select
+              id="searchType"
+              class="form-select"
+              name="searchType"
+              [(ngModel)]="searchType">
+
+              <option value="name">Medicine Name</option>
+              <option value="brand">Brand Name</option>
+              <option value="symptom">Symptom</option>
+              <option value="prescription">Prescription Required</option>
+            </select>
+          </div>
+
+          <div class="col-md-5" *ngIf="searchType !== 'prescription'">
+            <label for="searchValue" class="form-label">Search Term</label>
+
+            <input
+              id="searchValue"
+              type="text"
+              class="form-control"
+              name="searchValue"
+              [(ngModel)]="searchValue"
+              placeholder="Enter search term">
+          </div>
+
+          <div class="col-md-5" *ngIf="searchType === 'prescription'">
+            <label for="searchPrescription" class="form-label">
+              Prescription Required?
+            </label>
+
+            <select
+              id="searchPrescription"
+              class="form-select"
+              name="searchPrescription"
+              [(ngModel)]="searchPrescriptionNeeded">
+
+              <option [ngValue]="true">Yes</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <button type="submit" class="btn btn-outline-primary me-2">
+              Search
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="resetSearch()">
+              Show All
+            </button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Medicine List -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      All Medicines
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Brand</th>
+            <th>Symptoms</th>
+            <th>Prescription Required</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of medicines">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.price | currency:'ZAR':'symbol':'1.2-2' }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.brand?.name || 'N/A' }}</td>
+            <td>
+              <span *ngFor="let symptom of item.symptoms; let last = last">
+                {{ symptom.name }}<span *ngIf="!last">, </span>
+              </span>
+            </td>
+            <td>{{ item.prescriptionNeeded ? 'Yes' : 'No' }}</td>
+          </tr>
+
+          <tr *ngIf="medicines.length === 0">
+            <td colspan="8" class="text-center py-3">
+              No medicines to display.
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,27 @@
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+.card-header {
+  font-weight: 600;
+}
+
+.form-control,
+.form-select {
+  border-radius: 6px;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.symptom-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+}
