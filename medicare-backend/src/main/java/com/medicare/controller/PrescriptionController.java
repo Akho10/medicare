@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.medicare.domain.Prescription;
@@ -26,7 +28,9 @@ public class PrescriptionController {
 	private PrescriptionService prescriptionService;
 
 	@PostMapping("/add")
-	public Prescription addPrescription(long userId, long adminId, List<PrescriptionItem> items, String instructions) {
+	public Prescription addPrescription(@RequestParam long userId, @RequestParam long adminId,
+			@RequestParam(required = false) String instructions, @RequestBody List<PrescriptionItem> items) {
+
 		return prescriptionService.addPrescription(userId, adminId, items, instructions);
 	}
 

@@ -3,6 +3,8 @@ package com.medicare.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,35 +22,36 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="prescriptions")
+@Table(name = "prescriptions")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Prescription {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	//for user
+
+	// for user
 	@ManyToOne
-	@JoinColumn(name="user_id", nullable = false)
+	@JoinColumn(name = "user_id", nullable = false)
+	@JsonIgnore
 	private User user;
-	
-	//by admin
+
+	// by admin
 	@ManyToOne
-	@JoinColumn(name="admin_id", nullable = false)
+	@JoinColumn(name = "admin_id", nullable = false)
+	@JsonIgnore
 	private Admin admin;
-	
-	//medicine
-	@OneToMany(mappedBy="prescription", cascade = CascadeType.ALL)
+
+	// medicine
+	@OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
 	private List<PrescriptionItem> prescriptionItems = new ArrayList<>();
-	
+
 	private String instructions;
-	
+
 	@Enumerated(EnumType.STRING)
 	private PrescriptionStatus status;
-
 
 	public long getId() {
 		return id;
@@ -97,6 +100,5 @@ public class Prescription {
 	public void setStatus(PrescriptionStatus status) {
 		this.status = status;
 	}
-	
-	
+
 }

@@ -1,5 +1,7 @@
 package com.medicare.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="prescription_items")
+@Table(name = "prescription_items")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,18 +24,18 @@ public class PrescriptionItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@ManyToOne
-	@JoinColumn(name="prescription_id")
+	@JoinColumn(name = "prescription_id")
+	@JsonIgnore
 	private Prescription prescription;
-	
+
 	@ManyToOne
-	@JoinColumn(name="medicine_id")
+	@JoinColumn(name = "medicine_id")
 	private Medicine medicine;
-	
+
 	private int quantity;
 	private String instructions;
-	
 
 	public long getId() {
 		return id;
@@ -74,6 +76,5 @@ public class PrescriptionItem {
 	public void setInstructions(String instructions) {
 		this.instructions = instructions;
 	}
-	
-	
+
 }
