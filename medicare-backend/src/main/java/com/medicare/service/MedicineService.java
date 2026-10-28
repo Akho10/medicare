@@ -18,60 +18,64 @@ public class MedicineService {
 
 	@Autowired
 	private MedicineRepository medicineRepository;
-	
+
 	@Autowired
 	private BrandService brandService;
-	
+
 	@Autowired
 	private SymptomService symptomService;
-	
-	//add
+
+	// add
 	@Transactional
 	public Medicine addMedicine(Medicine medicine, long brandId, List<Long> symptomIds) {
-		
-		//ceck if brand exists
+
+		// ceck if brand exists
 		Brand brand = brandService.findBrandById(brandId);
-		
+
 		List<Symptom> symptoms = symptomIds.stream()
 				.map(id -> symptomService.findSymptomById(id))
 				.toList();
-		
+
 		medicine.setBrand(brand);
 		medicine.setSymptoms(symptoms);
-		
+
 		return medicineRepository.save(medicine);
 	}
-	
-	//listAll
+
+	// listAll
 	public List<Medicine> findAllMedicines() {
 		return medicineRepository.findAll();
 	}
-	
-	//findById
+
+	// findById
 	public Medicine findMedicineById(long id) {
 		return medicineRepository.findById(id).orElseThrow(() -> new RuntimeException("Medicine not found."));
 	}
-	
-	//searchByName
-	public List<Medicine> searchByName(String name){
-		
+
+	// searchByName
+	public List<Medicine> searchByName(String name) {
+
 		return medicineRepository.searchMedicineByNameContainingIgnoreCase(name);
 	}
-	
-	//search by brand 
-	public List<Medicine> searchByBrandName(String brandName){
-		
+
+	// search by brand
+	public List<Medicine> searchByBrandName(String brandName) {
+
 		return medicineRepository.searchBrandByNameContainingIgnoreCase(brandName);
 	}
-	
-	//search by sypmtom
-	public List<Medicine> searchBySymptomName(String symptomName){
-		
+
+	// search by sypmtom
+	public List<Medicine> searchBySymptomName(String symptomName) {
+
 		return medicineRepository.searchSymptomsByNameContainingIgnoreCase(symptomName);
 	}
-	//search by prescription needed
-	public List<Medicine> searchByPrescriptionNeeded(boolean prescriptionNeeded){
-		
+
+	// search by prescription needed
+	public List<Medicine> searchByPrescriptionNeeded(boolean prescriptionNeeded) {
+
 		return medicineRepository.findByPrescriptionNeeded(prescriptionNeeded);
 	}
+
+	// filterAll
+
 }

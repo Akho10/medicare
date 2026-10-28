@@ -1,5 +1,7 @@
 package com.medicare.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +17,20 @@ public class PaymentService {
 
 	@Autowired
 	private PaymentRepository paymentRepository;
-	
+
 	public Payment addPayment(Payment payment) {
-		payment.setStatus(PaymentStatus.PAID);
+		payment.setStatus(PaymentStatus.PENDING);
 		return paymentRepository.save(payment);
 	}
-	
-	//failed
+
+	// failed
 	public Payment failedPayment(Payment payment) {
-		
+
 		payment.setStatus(PaymentStatus.FAILED);
 		return paymentRepository.save(payment);
 	}
-	
+
+	public List<Payment> listAllPayments() {
+		return paymentRepository.findAll();
+	}
 }
