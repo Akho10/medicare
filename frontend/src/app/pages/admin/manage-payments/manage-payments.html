@@ -1,1 +1,50 @@
-<p>manage-payments works!</p>
+
+<div class="container mt-4">
+  <h2>Manage Payments</h2>
+  <p>View payments and their current statuses.</p>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="payments.length === 0 && !errorMessage"
+       class="alert alert-info">
+    No payments found.
+  </div>
+
+  <div class="table-responsive" *ngIf="payments.length > 0">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Payment ID</th>
+          <th>Prescription ID</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let payment of payments">
+          <td>{{ payment.id }}</td>
+          <td>{{ payment.prescription?.id ?? 'N/A' }}</td>
+          <td>R {{ payment.amount | number:'1.2-2' }}</td>
+          <td>
+            <span class="badge"
+              [ngClass]="{
+                'bg-warning text-dark': payment.status === 'PENDING',
+                'bg-success': payment.status === 'PAID',
+                'bg-danger': payment.status === 'FAILED'
+              }">
+              {{ payment.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="btn btn-primary" (click)="loadPayments()">
+    Refresh Payments
+  </button>
+</div>
+
