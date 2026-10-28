@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,28 +20,31 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="orders")
+@Table(name = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Order {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	private double totalAmount;
-	
+
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
-	
+
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 	@OneToMany(mappedBy = "order")
 	private List<OrderItem> orderItems = new ArrayList<>();
-	
+
+	@OneToOne
+	@JoinColumn(name = "prescription_id", unique = true)
+	private Prescription prescription;
 
 	public long getId() {
 		return id;
@@ -81,7 +85,12 @@ public class Order {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
-	
-	
 
+	public Prescription getPrescription() {
+		return prescription;
+	}
+
+	public void setPrescription(Prescription prescription) {
+		this.prescription = prescription;
+	}
 }

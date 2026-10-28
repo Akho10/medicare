@@ -3,6 +3,8 @@ package com.medicare.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,9 +17,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,23 +29,23 @@ public class User {
 	private long id;
 	private String firstName;
 	private String lastName;
-	
-	@Column(unique=true,nullable=false)
+
+	@Column(unique = true, nullable = false)
 	private String email;
-	
+
 	private String password;
 	private String phone;
-	
-//	//user can have one or more symptoms/medical conditions
-//	private List<Symptom> symptoms = new ArrayList<>();
-	
-	//user can have many prescriptions
+
+	// //user can have one or more symptoms/medical conditions
+	// private List<Symptom> symptoms = new ArrayList<>();
+
+	// user can have many prescriptions
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Prescription> prescriptions = new ArrayList<>();
-	
+
 	@OneToMany(mappedBy = "user")
 	private List<Order> orders = new ArrayList<>();
-	
 
 	public long getId() {
 		return id;
@@ -109,9 +110,5 @@ public class User {
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
-	
-	
-	
-	
-	
+
 }

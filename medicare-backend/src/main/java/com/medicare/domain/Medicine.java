@@ -3,6 +3,8 @@ package com.medicare.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="medicines")
+@Table(name = "medicines")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,32 +30,29 @@ public class Medicine {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	private String name;
 	private String description;
 	private double price;
 	private int quantity;
-//	private List<String> symptoms;
+	// private List<String> symptoms;
 	private boolean prescriptionNeeded;
-	
-	
+
 	@ManyToOne
-	@JoinColumn(name="brand_id")
+	@JoinColumn(name = "brand_id")
 	private Brand brand;
-	
-	@OneToMany(mappedBy="medicine")
-	private List<PrescriptionItem> prescriptionItems = new ArrayList<>();
-	
+
 	@OneToMany(mappedBy = "medicine")
+	@JsonIgnore
+	private List<PrescriptionItem> prescriptionItems = new ArrayList<>();
+
+	@OneToMany(mappedBy = "medicine")
+	@JsonIgnore
 	private List<OrderItem> orderItems = new ArrayList<>();
-	
+
 	@ManyToMany
-	@JoinTable(
-			name="medicine_symptoms",
-			joinColumns=@JoinColumn(name="medicine_id"),
-			inverseJoinColumns = @JoinColumn(name="symptom_id"))
+	@JoinTable(name = "medicine_symptoms", joinColumns = @JoinColumn(name = "medicine_id"), inverseJoinColumns = @JoinColumn(name = "symptom_id"))
 	private List<Symptom> symptoms = new ArrayList<>();
-	
 
 	public long getId() {
 		return id;
@@ -134,7 +133,5 @@ public class Medicine {
 	public void setSymptoms(List<Symptom> symptoms) {
 		this.symptoms = symptoms;
 	}
-	
-	
-	
+
 }

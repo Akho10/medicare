@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,7 +36,6 @@ public class Prescription {
 	// for user
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
-	@JsonIgnore
 	private User user;
 
 	// by admin
@@ -52,6 +52,9 @@ public class Prescription {
 
 	@Enumerated(EnumType.STRING)
 	private PrescriptionStatus status;
+
+	@OneToOne(mappedBy = "prescription")
+	private Order order;
 
 	public long getId() {
 		return id;
@@ -99,6 +102,14 @@ public class Prescription {
 
 	public void setStatus(PrescriptionStatus status) {
 		this.status = status;
+	}
+
+	public Order getOrders() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 }
