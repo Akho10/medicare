@@ -39,7 +39,7 @@ public class PrescriptionController {
 		return prescriptionService.findPrescriptionById(id);
 	}
 
-	@GetMapping("user/{userId}")
+	@GetMapping("/user/{userId}")
 	public List<Prescription> findUserPrescription(@PathVariable long userId) {
 		return prescriptionService.findUserPrescription(userId);
 	}
@@ -49,7 +49,7 @@ public class PrescriptionController {
 		return prescriptionService.findAllPrescriptions();
 	}
 
-	@DeleteMapping("delete/{id}")
+	@DeleteMapping("/delete/{id}")
 	public void deletePrescription(@PathVariable long id) {
 		prescriptionService.deletePrescription(id);
 	}
