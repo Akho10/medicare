@@ -1,1 +1,175 @@
-<p>manage-prescriptions works!</p>
+<div class="prescription-page">
+
+    <h2>Manage Prescriptions</h2>
+    <p class="intro">
+        Create prescriptions for registered users and select the required medicines.
+    </p>
+
+    <div *ngIf="message" class="success-message">
+        {{ message }}
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+    </div>
+
+    <section class="form-card">
+        <h3>Create a Prescription</h3>
+
+        <form (ngSubmit)="createPrescription()">
+
+            <div class="form-group">
+                <label for="user">Select User</label>
+
+                <select id="user" name="selectedUserId" [(ngModel)]="selectedUserId" required>
+
+                    <option [ngValue]="0" disabled>
+                        Choose a registered user
+                    </option>
+
+                    <option *ngFor="let user of users" [ngValue]="user.id">
+
+                        {{ user.firstName }} {{ user.lastName }}
+                        ({{ user.email }})
+
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="medicine">Select Medicine</label>
+
+                <select id="medicine" name="selectedMedicineId" [(ngModel)]="selectedMedicineId">
+
+                    <option [ngValue]="0">
+                        Choose a medicine
+                    </option>
+
+                    <option *ngFor="let medicine of medicines" [ngValue]="medicine.id"
+                        [disabled]="medicine.quantity < 1">
+
+                        {{ medicine.name }}
+                        — R{{ medicine.price }}
+                        (Stock: {{ medicine.quantity }})
+
+                    </option>
+                </select>
+
+                <button type="button" class="secondary-button" (click)="addMedicine()">
+                    Add Medicine to Prescrption
+                </button>
+            </div>
+
+            <div *ngIf="medicineLines.length > 0" class="medicine-section">
+                <h4>Selected Medicines</h4>
+
+                <div *ngFor="let item of medicineLines" class="medicine-item">
+
+                    <div class="medicine-heading">
+                        <strong>
+                            {{ getMedicine(item.medicineId)?.name }}
+                        </strong>
+
+                        <button type="button" class="remove-button" (click)="removeMedicine(item.medicineId)">
+                            Remove
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label [for]="'quantity-' + item.medicineId">
+                            Quantity
+                        </label>
+
+                        <input type="number" [id]="'quantity-' + item.medicineId" [name]="'quantity-' + item.medicineId"
+                            [(ngModel)]="item.quantity" min="1" [max]="getMedicine(item.medicineId)?.quantity ?? 1"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label [for]="'itemInstructions-' + item.medicineId">
+                            Medicine Instructions
+                        </label>
+
+                        <input type="text" [id]="'itemInstructions-' + item.medicineId"
+                            [name]="'itemInstructions-' + item.medicineId" [(ngModel)]="item.instructions"
+                            placeholder="e.g. Take after meals">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="instructions">General Instructions</label>
+
+                <textarea id="instructions" name="instructions" [(ngModel)]="instructions" rows="3"
+                    placeholder="Enter any general prescription instructions">
+        </textarea>
+            </div>
+
+            <button type="submit" class="primary-button" [disabled]="loading">
+
+                {{ loading ? 'Creating...' : 'Create Prescription' }}
+
+            </button>
+
+        </form>
+    </section>
+
+    <section class="list-card">
+        <h3>Existing Prescriptions</h3>
+
+        <p *ngIf="prescriptions.length === 0">
+            No prescriptions found.
+        </p>
+
+        <div class="table-wrapper" *ngIf="prescriptions.length > 0">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Medicines</th>
+                        <th>Instructions</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let prescription of prescriptions">
+                        <td>{{ prescription.id }}</td>
+                        <td>
+                            <ng-container *ngIf="prescription.user; else userUnavailable">
+                                {{ prescription.user.firstName }}
+                                {{ prescription.user.lastName }}
+                            </ng-container>
+
+                            <ng-template #userUnavailable>
+                                User #{{ prescription.user?.id || 'N/A' }}
+                            </ng-template>
+                        </td>
+
+                        <td>
+                            <div *ngFor="let item of prescription.prescriptionItems">
+
+                                {{ item.medicine?.name || 'Medicine' }}
+                                ({{ item.quantity }})
+
+                            </div>
+                        </td>
+
+                        <td>{{ prescription.instructions || '—' }}</td>
+
+                        <td>
+                            <span class="status" [ngClass]="(prescription.status || 'PENDING').toLowerCase()">
+
+                                {{ prescription.status || 'PENDING' }}
+
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>

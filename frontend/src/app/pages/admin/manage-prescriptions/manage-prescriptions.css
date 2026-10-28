@@ -1,0 +1,184 @@
+
+.prescription-page {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 20px;
+  color: #263238;
+}
+
+h2 {
+  margin-bottom: 8px;
+}
+
+.intro {
+  color: #667085;
+  margin-bottom: 25px;
+}
+
+.form-card,
+.list-card {
+  background: #ffffff;
+  border: 1px solid #e0e5eb;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 25px;
+}
+
+h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+label {
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px;
+  border: 1px solid #cbd2d9;
+  border-radius: 6px;
+  font: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #b8d8ff;
+  border-color: #2875c7;
+}
+
+small {
+  color: #667085;
+}
+
+.primary-button,
+.secondary-button,
+.remove-button {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.primary-button {
+  background: #1769aa;
+  color: white;
+  margin-top: 5px;
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  background: #e8f1fb;
+  color: #175a91;
+  align-self: flex-start;
+}
+
+.medicine-section {
+  margin: 22px 0;
+}
+
+.medicine-item {
+  border: 1px solid #e0e5eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.medicine-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.remove-button {
+  background: #fdecec;
+  color: #b42318;
+}
+
+.success-message,
+.error-message {
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 18px;
+}
+
+.success-message {
+  background: #e8f7ed;
+  color: #176b36;
+}
+
+.error-message {
+  background: #fdecec;
+  color: #b42318;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px;
+  border-bottom: 1px solid #e0e5eb;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #f5f7fa;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 15px;
+  background: #fff0c2;
+  color: #7a5200;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.approved {
+  background: #e0f5e7;
+  color: #176b36;
+}
+
+.status.rejected {
+  background: #fdecec;
+  color: #b42318;
+}
+
+@media (max-width: 600px) {
+  .prescription-page {
+    padding: 12px;
+    margin: 15px auto;
+  }
+
+  .form-card,
+  .list-card {
+    padding: 16px;
+  }
+}
