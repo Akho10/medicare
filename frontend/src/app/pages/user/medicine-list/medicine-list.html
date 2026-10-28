@@ -1,1 +1,95 @@
-<p>medicine-list works!</p>
+
+<div class="medicine-page">
+  <div class="page-header">
+    <h2>Available Medicines</h2>
+    <p>Search for medicines and view their details.</p>
+  </div>
+
+  <div class="search-panel">
+    <div class="search-field">
+      <label for="medicineName">Medicine name</label>
+      <input
+        id="medicineName"
+        type="text"
+        [(ngModel)]="searchName"
+        placeholder="e.g. Panado">
+    </div>
+
+    <div class="search-field">
+      <label for="brandName">Brand</label>
+      <input
+        id="brandName"
+        type="text"
+        [(ngModel)]="searchBrand"
+        placeholder="Enter brand name">
+    </div>
+
+    <div class="search-field">
+      <label for="symptomName">Symptom</label>
+      <input
+        id="symptomName"
+        type="text"
+        [(ngModel)]="searchSymptom"
+        placeholder="e.g. Headache">
+    </div>
+
+    <div class="search-field">
+      <label for="prescription">Prescription required?</label>
+      <select id="prescription" [(ngModel)]="prescriptionFilter">
+        <option value="">All medicines</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+
+    <div class="search-buttons">
+      <button class="btn-search" (click)="search()">Search</button>
+      <button class="btn-clear" (click)="clearSearch()">Clear</button>
+    </div>
+  </div>
+
+  <p *ngIf="loading" class="info-message">Loading medicines...</p>
+  <p *ngIf="message" class="info-message">{{ message }}</p>
+  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+  <div class="medicine-grid" *ngIf="!loading && medicines.length > 0">
+    <div class="medicine-card" *ngFor="let medicine of medicines">
+      <div class="card-top">
+        <h3>{{ medicine.name }}</h3>
+        <span
+          class="prescription-badge"
+          [class.required]="medicine.prescriptionNeeded">
+          {{ medicine.prescriptionNeeded
+              ? 'Prescription required'
+              : 'No prescription required' }}
+        </span>
+      </div>
+
+      <p class="description">{{ medicine.description }}</p>
+
+      <p><strong>Brand:</strong> {{ medicine.brand?.name || 'N/A' }}</p>
+
+      <div class="symptoms">
+        <strong>Symptoms:</strong>
+        <span *ngIf="!medicine.symptoms?.length">N/A</span>
+        <span class="symptom-tag" *ngFor="let symptom of medicine.symptoms">
+          {{ symptom.name }}
+        </span>
+      </div>
+
+      <div class="card-bottom">
+        <span class="price">
+          {{ medicine.price | currency:'ZAR':'symbol':'1.2-2' }}
+        </span>
+
+        <span
+          class="stock"
+          [class.out-of-stock]="medicine.quantity <= 0">
+          {{ medicine.quantity > 0
+              ? 'In stock: ' + medicine.quantity
+              : 'Out of stock' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

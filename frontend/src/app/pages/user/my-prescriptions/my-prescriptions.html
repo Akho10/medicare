@@ -1,1 +1,129 @@
-<p>my-prescriptions works!</p>
+<div class="container py-4">
+
+  <div class="mb-4">
+    <h2 class="fw-bold">My Prescriptions</h2>
+    <p class="text-muted">
+      View your prescribed medicines, instructions and prescription status.
+    </p>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading your prescriptions...</p>
+  </div>
+
+  <div
+    *ngIf="!loading && prescriptions.length === 0 && !errorMessage"
+    class="alert alert-info">
+    You do not have any prescriptions yet.
+  </div>
+
+  <div
+    *ngFor="let prescription of prescriptions"
+    class="card shadow-sm mb-4">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        Prescription #{{ prescription.id }}
+      </h5>
+
+      <span
+        class="badge"
+        [ngClass]="{
+          'bg-warning text-dark': prescription.status === 'PENDING',
+          'bg-success': prescription.status === 'APPROVED',
+          'bg-danger': prescription.status === 'REJECTED'
+        }">
+        {{ prescription.status || 'UNKNOWN' }}
+      </span>
+    </div>
+
+    <div class="card-body">
+
+      <div class="mb-3">
+        <strong>Prescription instructions:</strong>
+        <p class="mb-0">
+          {{ prescription.instructions || 'No additional instructions.' }}
+        </p>
+      </div>
+
+      <h6 class="fw-bold mb-3">Prescribed Medicines</h6>
+
+      <div
+        *ngIf="!prescription.prescriptionItems?.length"
+        class="text-muted mb-3">
+        No medicine details available.
+      </div>
+
+      <div
+        *ngFor="let item of prescription.prescriptionItems"
+        class="medicine-item mb-3 p-3 rounded">
+
+        <h6 class="mb-2">
+          {{ item.medicine?.name || 'Medicine details unavailable' }}
+        </h6>
+
+        <p class="mb-1">
+          <strong>Quantity:</strong> {{ item.quantity }}
+        </p>
+
+        <p class="mb-1">
+          <strong>Medicine instructions:</strong>
+          {{ item.instructions || 'No instructions provided.' }}
+        </p>
+
+        <p class="mb-0" *ngIf="item.medicine?.price != null">
+          <strong>Price per unit:</strong>
+          {{ item.medicine?.price | currency:'ZAR':'symbol':'1.2-2' }}
+        </p>
+
+      </div>
+
+      <div
+        *ngIf="prescription.status === 'PENDING'"
+        class="d-flex gap-2 mt-3">
+
+        <button
+          type="button"
+          class="btn btn-success"
+          [disabled]="loading"
+          (click)="approvePrescription(prescription.id!)">
+          Approve Prescription
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          [disabled]="loading"
+          (click)="rejectPrescription(prescription.id!)">
+          Reject Prescription
+        </button>
+
+      </div>
+
+      <div
+        *ngIf="prescription.status === 'APPROVED'"
+        class="alert alert-success mt-3 mb-0">
+        You have approved this prescription.
+      </div>
+
+      <div
+        *ngIf="prescription.status === 'REJECTED'"
+        class="alert alert-danger mt-3 mb-0">
+        You have rejected this prescription.
+      </div>
+
+    </div>
+  </div>
+
+</div>

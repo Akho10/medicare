@@ -1,0 +1,160 @@
+.medicine-page {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.page-header {
+  margin-bottom: 25px;
+}
+
+.page-header h2 {
+  margin-bottom: 8px;
+  color: #243447;
+}
+
+.page-header p {
+  color: #667085;
+}
+
+.search-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  margin-bottom: 25px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.search-field label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.search-field input,
+.search-field select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: white;
+}
+
+.search-buttons {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+
+.search-buttons button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-search {
+  background: #176b87;
+  color: white;
+}
+
+.btn-clear {
+  background: #e2e8f0;
+  color: #243447;
+}
+
+.medicine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.medicine-card {
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card-top {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
+}
+
+.card-top h3 {
+  margin: 0;
+  color: #243447;
+}
+
+.prescription-badge,
+.symptom-tag {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 15px;
+  font-size: 12px;
+  background: #dcfce7;
+  color: #166534;
+}
+
+.prescription-badge.required {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.description {
+  margin: 15px 0;
+  color: #667085;
+}
+
+.symptoms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #176b87;
+}
+
+.stock {
+  font-size: 13px;
+  color: #166534;
+}
+
+.stock.out-of-stock {
+  color: #b91c1c;
+}
+
+.info-message {
+  margin: 15px 0;
+  color: #475569;
+}
+
+.error-message {
+  color: #b91c1c;
+}
