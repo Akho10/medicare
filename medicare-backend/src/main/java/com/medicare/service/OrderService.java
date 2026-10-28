@@ -1,5 +1,6 @@
 package com.medicare.service;
 
+import com.medicare.persistence.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ import jakarta.transaction.Transactional;
 @Service
 public class OrderService {
 
+	private final PaymentRepository paymentRepository;
+
 	@Autowired
 	private OrderRepository orderRepository;
 
@@ -36,6 +39,10 @@ public class OrderService {
 	@Autowired
 	private PaymentService paymentService;
 
+	OrderService(PaymentRepository paymentRepository) {
+		this.paymentRepository = paymentRepository;
+	}
+
 	// placeOrder
 	@Transactional
 	public Order placeOrder(Long prescriptionId, double amount) {
@@ -46,9 +53,11 @@ public class OrderService {
 			throw new RuntimeException("Prescription must be approved before placing an order.");
 		}
 
-		if (prescription.getPrescriptionItems().isEmpty()) {
+		if (prescription.getPrescriptionItems().isEmpty() || prescription.getPrescriptionItems() == null) {
 			throw new RuntimeException("No medicines found in prescription.");
 		}
+
+		amount = 0;
 
 		for (PrescriptionItem item : prescription.getPrescriptionItems()) {
 
@@ -61,9 +70,10 @@ public class OrderService {
 				throw new RuntimeException("Not enough stock for " + medicine.getName());
 			}
 
-//			medicine.setQuantity(medicine.getQuantity() - item.getQuantity());
-//			
-//			medicineRepository.save(medicine);
+			amount += medicine.getPrice() * item.getQuantity();
+			// medicine.setQuantity(medicine.getQuantity() - item.getQuantity());
+			//
+			// medicineRepository.save(medicine);
 		}
 
 		// pay
@@ -75,44 +85,36 @@ public class OrderService {
 		paymentService.addPayment(payment);
 
 		payment.setStatus(PaymentStatus.PAID);
-
-		// reduce quantity
-		for (PrescriptionItem item : prescription.getPrescriptionItems()) {
-
-			// check medicine
-			Medicine medicine = medicineService.findMedicineById(item.getMedicine().getId());
-
-			// check if the medicine that is prescription is less than actual medicine
-			// quantity
-//			if(medicine.getQuantity() < item.getQuantity()) {
-//				throw new RuntimeException("Not enough stock for " + medicine.getName());
-//			}
-
-			medicine.setQuantity(medicine.getQuantity() - item.getQuantity());
-
-			medicineRepository.save(medicine);
-		}
+		paymentRepository.save(payment);
 
 		// make order
 
 		Order order = new Order();
 		order.setUser(prescription.getUser());
-		order.setOrderItems(order.getOrderItems());
+		order.setPrescription(prescription);
+		// order.setOrderItems(order.getOrderItems());
 		order.setTotalAmount(amount);
 		order.setStatus(OrderStatus.COMPLETE);
 
 		// create order items
 		for (PrescriptionItem item : prescription.getPrescriptionItems()) {
 
+			Medicine medicine = medicineService.findMedicineById(item.getMedicine().getId());
+
+			// reduce quantity
+			medicine.setQuantity(medicine.getQuantity() - item.getQuantity());
+			medicineRepository.save(medicine);
+
 			OrderItem orderItem = new OrderItem();
-			
+
 			orderItem.setOrder(order);
-			orderItem.setMedicine(item.getMedicine());
+			orderItem.setMedicine(medicine);
 			orderItem.setQuantity(item.getQuantity());
-			orderItem.setPrice(item.getMedicine().getPrice());
-			
+			orderItem.setPrice(medicine.getPrice());
+
 			order.getOrderItems().add(orderItem);
 		}
+
 		// save order
 		return orderRepository.save(order);
 
