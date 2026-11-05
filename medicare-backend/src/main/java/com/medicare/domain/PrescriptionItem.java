@@ -1,5 +1,6 @@
 package com.medicare.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -27,11 +28,12 @@ public class PrescriptionItem {
 
 	@ManyToOne
 	@JoinColumn(name = "prescription_id")
-	@JsonIgnore
+	@JsonBackReference("prescription-items")
 	private Prescription prescription;
 
 	@ManyToOne
 	@JoinColumn(name = "medicine_id")
+	@JsonIgnore
 	private Medicine medicine;
 
 	private int quantity;

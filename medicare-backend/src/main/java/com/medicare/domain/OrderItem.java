@@ -1,5 +1,7 @@
 package com.medicare.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,27 +15,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="order_items")
+@Table(name = "order_items")
 @Getter
 @Setter
 @NoArgsConstructor
 public class OrderItem {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@ManyToOne
-	@JoinColumn(name="order_id")
+	@JoinColumn(name = "order_id")
+	@JsonBackReference("order-items")
 	private Order order;
-	
+
 	@ManyToOne
-	@JoinColumn(name="medicine_id")
+	@JoinColumn(name = "medicine_id")
 	private Medicine medicine;
-	
+
 	private int quantity;
 	private double price;
-	
 
 	public long getId() {
 		return id;
@@ -74,7 +76,5 @@ public class OrderItem {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	
-	
 
 }

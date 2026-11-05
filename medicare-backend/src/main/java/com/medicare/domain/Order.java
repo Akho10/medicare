@@ -3,6 +3,10 @@ package com.medicare.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,11 +43,13 @@ public class Order {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToMany(mappedBy = "order")
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	@JsonManagedReference("order-items")
 	private List<OrderItem> orderItems = new ArrayList<>();
 
 	@OneToOne
 	@JoinColumn(name = "prescription_id", unique = true)
+	@JsonIgnore
 	private Prescription prescription;
 
 	public long getId() {

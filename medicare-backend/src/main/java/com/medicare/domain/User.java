@@ -44,6 +44,7 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Prescription> prescriptions = new ArrayList<>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Order> orders = new ArrayList<>();
 

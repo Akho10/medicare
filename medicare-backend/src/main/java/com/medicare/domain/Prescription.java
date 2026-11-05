@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -46,6 +47,7 @@ public class Prescription {
 
 	// medicine
 	@OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
+	@JsonManagedReference("prescription-items")
 	private List<PrescriptionItem> prescriptionItems = new ArrayList<>();
 
 	private String instructions;
@@ -54,6 +56,7 @@ public class Prescription {
 	private PrescriptionStatus status;
 
 	@OneToOne(mappedBy = "prescription")
+	@JsonIgnore
 	private Order order;
 
 	public long getId() {
