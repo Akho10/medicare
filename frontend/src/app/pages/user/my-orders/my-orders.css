@@ -1,0 +1,150 @@
+.orders-page {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.page-heading {
+  margin-bottom: 30px;
+}
+
+.page-heading h2 {
+  color: #173b57;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.page-heading p {
+  color: #6c757d;
+}
+
+.order-card {
+  background: #fff;
+  border: 1px solid #e1e7ec;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.order-header h4 {
+  color: #173b57;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.order-total {
+  text-align: right;
+}
+
+.order-total small {
+  color: #6c757d;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e8f1fb;
+  color: #245b8f;
+}
+
+.order-status.complete {
+  background: #e2f5e9;
+  color: #187443;
+}
+
+.order-status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.order-status.cancelled {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.order-items {
+  padding-top: 20px;
+}
+
+.order-items h5 {
+  color: #173b57;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.medicine-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f2f4;
+}
+
+.medicine-row:last-child {
+  border-bottom: none;
+}
+
+.medicine-row p {
+  margin: 5px 0 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.medicine-row > span {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.empty-orders {
+  text-align: center;
+  background: #f8fafc;
+  padding: 45px 20px;
+  border-radius: 12px;
+}
+
+.empty-orders h4 {
+  color: #173b57;
+}
+
+.empty-orders p {
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.message {
+  padding: 20px 0;
+  color: #6c757d;
+}
+
+@media (max-width: 576px) {
+  .orders-page {
+    margin: 20px auto;
+    padding: 12px;
+  }
+
+  .order-card {
+    padding: 16px;
+  }
+
+  .order-header {
+    flex-direction: column;
+  }
+
+  .order-total {
+    text-align: left;
+  }
+}

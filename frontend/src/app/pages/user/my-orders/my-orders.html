@@ -1,1 +1,61 @@
-<p>my-orders works!</p>
+
+<div class="orders-page">
+
+  <div class="page-heading">
+    <h2>My Orders</h2>
+    <p>View your medicine orders and payment details.</p>
+  </div>
+
+  <div *ngIf="loading" class="message">
+    Loading your orders...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && !errorMessage && orders.length === 0"
+       class="empty-orders">
+    <h4>No orders yet</h4>
+    <p>Your placed orders will appear here.</p>
+  </div>
+
+  <div *ngFor="let order of orders" class="order-card">
+
+    <div class="order-header">
+      <div>
+        <h4>Order #{{ order.id }}</h4>
+        <span class="order-status"
+              [ngClass]="order.status?.toLowerCase()">
+          {{ order.status }}
+        </span>
+      </div>
+
+      <div class="order-total">
+        <small>Total amount</small>
+        <h4>R{{ order.totalAmount | number:'1.2-2' }}</h4>
+      </div>
+    </div>
+
+    <div class="order-items">
+      <h5>Medicines</h5>
+
+      <div class="medicine-row"
+           *ngFor="let item of order.orderItems">
+
+        <div>
+          <strong>{{ item.medicine?.name || 'Medicine' }}</strong>
+          <p>Quantity: {{ item.quantity }}</p>
+        </div>
+
+        <span>
+          R{{ (item.price * item.quantity) | number:'1.2-2' }}
+        </span>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Prescription, PrescriptionService } from '../../../services/prescription';
 import { AuthService } from '../../../services/auth';
+import { OrderService } from '../../../services/order';
 
 @Component({
   imports: [CommonModule],
@@ -16,9 +17,12 @@ export class MyPrescriptions implements OnInit {
   errorMessage = '';
   successMessage = '';
 
+  placingOrderId: number | null = null;
+
   constructor(
     private prescriptionService: PrescriptionService,
-    private authService: AuthService
+    private authService: AuthService,
+    private orderService:OrderService
   ) { }
 
   ngOnInit(): void {
@@ -89,4 +93,29 @@ loadPrescriptions(): void {
       }
     });
   }
+
+  placeOrder(prescriptionId: number): void {
+  this.errorMessage = '';
+  this.successMessage = '';
+  this.placingOrderId = prescriptionId;
+
+  this.orderService.placeOrder(prescriptionId).subscribe({
+    next: (order) => {
+      this.successMessage =
+        `Order #${order.id} placed successfully. Total: R${order.totalAmount.toFixed(2)}`;
+
+      this.placingOrderId = null;
+      this.loadPrescriptions();
+    },
+    error: (error) => {
+      console.error('Error placing order:', error);
+
+      this.errorMessage =
+        error.error?.message ||
+        'Could not place the order. Please try again.';
+
+      this.placingOrderId = null;
+    }
+  });
+}
 }
