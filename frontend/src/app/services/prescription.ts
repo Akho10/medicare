@@ -42,7 +42,7 @@ export interface Prescription {
     instructions: string;
   }[];
   instructions?: string;
-  status?: string;
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
 }
 
 @Injectable({
