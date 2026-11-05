@@ -1,6 +1,9 @@
 package com.medicare.service;
 
 import com.medicare.persistence.PaymentRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +48,7 @@ public class OrderService {
 
 	// placeOrder
 	@Transactional
-	public Order placeOrder(Long prescriptionId, double amount) {
+	public Order placeOrder(Long prescriptionId) {
 
 		Prescription prescription = prescriptionService.findPrescriptionById(prescriptionId);
 
@@ -57,7 +60,7 @@ public class OrderService {
 			throw new RuntimeException("No medicines found in prescription.");
 		}
 
-		amount = 0;
+		double amount = 0;
 
 		for (PrescriptionItem item : prescription.getPrescriptionItems()) {
 
@@ -118,6 +121,12 @@ public class OrderService {
 		// save order
 		return orderRepository.save(order);
 
+	}
+
+	// findbyUser
+	public List<Order> getUserOrders(Long userId) {
+
+		return orderRepository.findByUserId(userId);
 	}
 
 }
