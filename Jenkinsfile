@@ -86,27 +86,32 @@ pipeline {
             passwordVariable: 'DOCKERHUB_TOKEN'
           )
         ]) {
-          sshagent(credentials: ['ec2-ssh-key']) {
+          withCredentials([
+            sshUserPrivateKey(
+              credentialsId: 'ec2-ssh-key',
+              keyFileVariable: 'EC2_SSH_KEY'
+            )
+          ]) {
             sh '''
               set -eu
               REMOTE="$EC2_USER@$EC2_HOST"
 
-              ssh -o BatchMode=yes "$REMOTE" 'mkdir -p ~/medicare'
-              scp -o BatchMode=yes docker-compose.yaml .env.example \
+              ssh -i "$EC2_SSH_KEY" -o IdentitiesOnly=yes -o BatchMode=yes "$REMOTE" 'mkdir -p ~/medicare'
+              scp -i "$EC2_SSH_KEY" -o IdentitiesOnly=yes -o BatchMode=yes docker-compose.yaml .env.example \
                 "$REMOTE:medicare/"
-              ssh -o BatchMode=yes "$REMOTE" \
+              ssh -i "$EC2_SSH_KEY" -o IdentitiesOnly=yes -o BatchMode=yes "$REMOTE" \
                 'test -f ~/medicare/.env || { echo "Create ~/medicare/.env from .env.example with production secrets before deploying."; exit 1; }'
 
               cleanup_remote_login() {
-                ssh -o BatchMode=yes "$REMOTE" \
+                ssh -i "$EC2_SSH_KEY" -o IdentitiesOnly=yes -o BatchMode=yes "$REMOTE" \
                   'docker logout >/dev/null 2>&1 || true' || true
               }
               trap cleanup_remote_login EXIT
 
-              printf '%s' "$DOCKERHUB_TOKEN" | ssh -o BatchMode=yes "$REMOTE" \
+              printf '%s' "$DOCKERHUB_TOKEN" | ssh -i "$EC2_SSH_KEY" -o IdentitiesOnly=yes -o BatchMode=yes "$REMOTE" \
                 "docker login --username '$DOCKERHUB_USERNAME' --password-stdin"
 
-              ssh -o BatchMode=yes "$REMOTE" \
+              ssh -i "$EC2_SSH_KEY" -o IdentitiesOnly=yes -o BatchMode=yes "$REMOTE" \
                 "cd ~/medicare && \
                 DOCKERHUB_USERNAME='$DOCKERHUB_USERNAME' IMAGE_TAG='$IMAGE_TAG' FRONTEND_PORT=80 docker compose pull backend frontend && \
                 DOCKERHUB_USERNAME='$DOCKERHUB_USERNAME' IMAGE_TAG='$IMAGE_TAG' FRONTEND_PORT=80 docker compose up -d --no-build"
