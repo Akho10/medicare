@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Prescription, PrescriptionItemRequest, PrescriptionLine, PrescriptionMedicine, PrescriptionService, PrescriptionUser } from '../../../services/prescription';
 import { AuthService } from '../../../services/auth';
+import { finalize } from 'rxjs';
 
 @Component({
   imports: [CommonModule, FormsModule],
@@ -28,7 +29,8 @@ users: PrescriptionUser[] = [];
 
   constructor(
     private prescriptionService: PrescriptionService,
-     private authService: AuthService
+    private authService: AuthService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -46,11 +48,13 @@ users: PrescriptionUser[] = [];
     this.prescriptionService.getUsers().subscribe({
       next: (data) => {
         this.users = data;
+        this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
         console.error('Could not load users:', error);
         this.errorMessage =
           'Could not load users. Check your users API endpoint.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -59,10 +63,12 @@ users: PrescriptionUser[] = [];
     this.prescriptionService.getMedicines().subscribe({
       next: (data) => {
         this.medicines = data;
+        this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
         console.error('Could not load medicines:', error);
         this.errorMessage = 'Could not load medicines.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -71,9 +77,12 @@ users: PrescriptionUser[] = [];
     this.prescriptionService.getPrescriptions().subscribe({
       next: (data) => {
         this.prescriptions = data;
+        this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
         console.error('Could not load prescriptions:', error);
+        this.errorMessage = 'Could not load prescriptions.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -182,15 +191,20 @@ users: PrescriptionUser[] = [];
       }));
 
     this.loading = true;
+    this.changeDetectorRef.markForCheck();
 
     this.prescriptionService.addPrescription(
       this.selectedUserId,
       this.adminId,
       items,
       this.instructions
+    ).pipe(
+      finalize(() => {
+        this.loading = false;
+        this.changeDetectorRef.markForCheck();
+      })
     ).subscribe({
       next: (response) => {
-        this.loading = false;
         this.message =
           `Prescription #${response.id} created successfully. Status: PENDING.`;
 
@@ -199,15 +213,16 @@ users: PrescriptionUser[] = [];
         this.medicineLines = [];
         this.selectedMedicineId = 0;
 
+        this.changeDetectorRef.markForCheck();
         this.loadPrescriptions();
       },
       error: (error) => {
-        this.loading = false;
         console.error('Could not create prescription:', error);
 
         this.errorMessage =
           error.error?.message ||
           'Could not create prescription. Check the backend console.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Medicine, MedicineService } from '../../../services/medicine';
+import { finalize } from 'rxjs';
 
 @Component({
   imports: [CommonModule, FormsModule],
@@ -21,7 +22,10 @@ export class MedicineList implements OnInit{
   errorMessage = '';
   loading = false;
 
-  constructor(private medicineService: MedicineService) {}
+  constructor(
+    private medicineService: MedicineService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadMedicines();
@@ -31,16 +35,20 @@ export class MedicineList implements OnInit{
     this.loading = true;
     this.message = '';
     this.errorMessage = '';
+    this.changeDetectorRef.markForCheck();
 
-    this.medicineService.getMedicines().subscribe({
+    this.medicineService.getMedicines().pipe(
+      finalize(() => {
+        this.loading = false;
+        this.changeDetectorRef.markForCheck();
+      })
+    ).subscribe({
       next: (data) => {
         this.medicines = data;
-        this.loading = false;
       },
       error: (error) => {
         console.error('Could not load medicines:', error);
         this.errorMessage = 'Could not load medicines. Please try again.';
-        this.loading = false;
       }
     });
   }
@@ -64,6 +72,7 @@ export class MedicineList implements OnInit{
 
   private runSearch(type: string): void {
     this.loading = true;
+    this.changeDetectorRef.markForCheck();
 
     let request;
 
@@ -86,10 +95,14 @@ export class MedicineList implements OnInit{
         );
     }
 
-    request.subscribe({
+    request.pipe(
+      finalize(() => {
+        this.loading = false;
+        this.changeDetectorRef.markForCheck();
+      })
+    ).subscribe({
       next: (data) => {
         this.medicines = data;
-        this.loading = false;
 
         if (data.length === 0) {
           this.message = 'No medicines found.';
@@ -98,7 +111,6 @@ export class MedicineList implements OnInit{
       error: (error) => {
         console.error('Medicine search failed:', error);
         this.errorMessage = 'Search failed. Please try again.';
-        this.loading = false;
       }
     });
   }

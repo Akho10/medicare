@@ -35,9 +35,9 @@ export interface MedicineForm {
   providedIn: 'root'
 })
 export class MedicineService {
-     private readonly medicineUrl = 'http://localhost:8080/medicines';
-  private readonly brandUrl = 'http://localhost:8080/brands';
-  private readonly symptomUrl = 'http://localhost:8080/symptoms';
+      private readonly medicineUrl = '/api/medicines';
+    private readonly brandUrl = '/api/brands';
+    private readonly symptomUrl = '/api/symptoms';
 
   constructor(private http: HttpClient) {}
 

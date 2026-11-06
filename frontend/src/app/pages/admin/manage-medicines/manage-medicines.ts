@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrandOption, Medicine, MedicineForm, MedicineService, SymptomOption } from '../../../services/medicine';
 
@@ -27,7 +27,10 @@ export class ManageMedicines implements OnInit{
   message = '';
   errorMessage = '';
 
-  constructor(private medicineService: MedicineService) {}
+  constructor(
+    private medicineService: MedicineService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadMedicines();
@@ -50,10 +53,12 @@ export class ManageMedicines implements OnInit{
       next: (data) => {
         this.medicines = data;
         this.errorMessage = '';
+        this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
         console.error('Error loading medicines:', error);
         this.errorMessage = 'Could not load medicines.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -62,10 +67,12 @@ export class ManageMedicines implements OnInit{
     this.medicineService.getBrands().subscribe({
       next: (data) => {
         this.brands = data;
+        this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
         console.error('Error loading brands:', error);
         this.errorMessage = 'Could not load brands for the form.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -74,10 +81,12 @@ export class ManageMedicines implements OnInit{
     this.medicineService.getSymptoms().subscribe({
       next: (data) => {
         this.symptoms = data;
+        this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
         console.error('Error loading symptoms:', error);
         this.errorMessage = 'Could not load symptoms for the form.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -134,11 +143,13 @@ export class ManageMedicines implements OnInit{
         this.selectedBrandId = null;
         this.selectedSymptomIds = [];
 
+        this.changeDetectorRef.markForCheck();
         this.loadMedicines();
       },
       error: (error) => {
         console.error('Error adding medicine:', error);
         this.errorMessage = 'Could not add medicine. Please check the backend error.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -183,11 +194,13 @@ export class ManageMedicines implements OnInit{
     request.subscribe({
       next: (data) => {
         this.medicines = data;
+        this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
         console.error('Error searching medicines:', error);
         this.medicines = [];
         this.errorMessage = 'Could not find medicines matching your search.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

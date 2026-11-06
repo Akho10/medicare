@@ -16,3 +16,4 @@ medicare-backend/target/
 .DS_Store
 Thumbs.db
 
+/medicare_db.sql

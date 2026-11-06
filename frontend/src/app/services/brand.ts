@@ -12,7 +12,7 @@ export interface Brand {
   providedIn: 'root'
 })
 export class BrandService {
-    private readonly apiUrl = 'http://localhost:8080/brands';
+    private readonly apiUrl = '/api/brands';
 
   constructor(private http: HttpClient) {}
 

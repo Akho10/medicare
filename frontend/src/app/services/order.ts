@@ -24,7 +24,7 @@ export interface Order {
   providedIn: 'root'
 })
 export class OrderService {
-private readonly orderUrl = 'http://localhost:8080/orders';
+private readonly orderUrl = '/api/orders';
 
   constructor(private http: HttpClient) {}
 

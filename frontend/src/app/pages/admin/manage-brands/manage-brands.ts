@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Brand, BrandService } from '../../../services/brand';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -23,7 +23,10 @@ export class ManageBrands implements OnInit{
   message = '';
   errorMessage = '';
 
-  constructor(private brandService: BrandService) {}
+  constructor(
+    private brandService: BrandService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     //  console.log('Manage Brands opened');
@@ -35,9 +38,11 @@ export class ManageBrands implements OnInit{
       next: (data) => {
         //  console.log('Brands loaded from database:', data);
         this.brands = data;
+        this.changeDetectorRef.markForCheck();
       },
       error: () => {
         this.errorMessage = 'Could not load brands.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -60,10 +65,12 @@ export class ManageBrands implements OnInit{
       next: () => {
         this.message = 'Brand added successfully!';
         this.brand = { name: '', description: '' };
+        this.changeDetectorRef.markForCheck();
         this.loadBrands();
       },
       error: () => {
         this.errorMessage = 'Could not add brand.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -80,10 +87,12 @@ export class ManageBrands implements OnInit{
     this.brandService.searchBrand(this.searchName.trim()).subscribe({
       next: (data) => {
         this.brands = data ? [data] : [];
+        this.changeDetectorRef.markForCheck();
       },
       error: () => {
         this.brands = [];
         this.errorMessage = 'No matching brand found.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -97,11 +106,13 @@ export class ManageBrands implements OnInit{
       next: () => {
         this.message = 'Brand deleted successfully!';
         this.errorMessage = '';
+        this.changeDetectorRef.markForCheck();
         this.loadBrands();
       },
       error: () => {
         this.errorMessage =
           'Could not delete brand. It may still have medicines linked to it.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

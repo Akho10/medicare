@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Order, OrderService } from '../../../services/order';
 import { AuthService } from '../../../services/auth';
+import { finalize } from 'rxjs';
 
 @Component({
   imports: [CommonModule],
@@ -17,7 +18,8 @@ export class MyOrders implements OnInit{
 
   constructor(
     private orderService: OrderService,
-    private authService: AuthService
+    private authService: AuthService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -34,11 +36,16 @@ export class MyOrders implements OnInit{
 
     this.loading = true;
     this.errorMessage = '';
+    this.changeDetectorRef.markForCheck();
 
-    this.orderService.getUserOrders(account.id).subscribe({
+    this.orderService.getUserOrders(account.id).pipe(
+      finalize(() => {
+        this.loading = false;
+        this.changeDetectorRef.markForCheck();
+      })
+    ).subscribe({
       next: (data) => {
         this.orders = data;
-        this.loading = false;
       },
       error: (error) => {
         console.error('Error loading orders:', error);
@@ -48,7 +55,6 @@ export class MyOrders implements OnInit{
             ? 'Cannot connect to the backend. Please check that Spring Boot is running.'
             : `Failed to load orders. HTTP status: ${error.status}`;
 
-        this.loading = false;
       }
     });
   }

@@ -22,7 +22,7 @@
             <ul class="navbar-nav me-auto">
 
                 <!-- Admin navigation -->
-                <ng-container *ngIf="role === 'ADMIN'">
+                <ng-container *ngIf="role() === 'ADMIN'">
 
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/admin-dashboard">Admin Dashboard</a>
@@ -51,7 +51,7 @@
                 </ng-container>
 
                 <!-- User navigation -->
-                <ng-container *ngIf="role === 'USER'">
+                <ng-container *ngIf="role() === 'USER'">
 
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/user-dashboard">Dashboard</a>
@@ -79,7 +79,7 @@
 
             <!-- Logout button -->
             <button
-                *ngIf="role === 'ADMIN' || role === 'USER'"
+                *ngIf="role() === 'ADMIN' || role() === 'USER'"
                 class="btn btn-outline-primary"
                 type="button"
                 (click)="logout()">

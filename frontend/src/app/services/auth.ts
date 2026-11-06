@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Service } from '@angular/core';
+import { Injectable, Service, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,8 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-    private readonly userUrl = 'http://localhost:8080/users';
-    private readonly adminUrl = 'http://localhost:8080/admin';
+    private readonly userUrl = '/api/users';
+    private readonly adminUrl = '/api/admin';
+    readonly role = signal<'USER' | 'ADMIN' | null>(this.readStoredRole());
 
     constructor(private http: HttpClient) { }
 
@@ -35,9 +36,14 @@ export class AuthService {
     saveLogin(account:any,role:'USER' | 'ADMIN'): void{
         sessionStorage.setItem('medicareAccount',JSON.stringify(account));
         sessionStorage.setItem('medicareRole',role);
+        this.role.set(role);
     }
 
     getRole() : 'USER' | 'ADMIN' | null{
+        return this.role();
+    }
+
+    private readStoredRole(): 'USER' | 'ADMIN' | null {
         const role = sessionStorage.getItem('medicareRole');
         return role === 'USER' || role === 'ADMIN' ? role:null;
     }
@@ -59,5 +65,6 @@ export class AuthService {
     logout() : void{
         sessionStorage.removeItem('medicareAccount');
         sessionStorage.removeItem('medicareRole');
+        this.role.set(null);
     }
 }

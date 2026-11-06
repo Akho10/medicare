@@ -49,9 +49,9 @@ export interface Prescription {
   providedIn: 'root'
 })
 export class PrescriptionService {
-    private userUrl = 'http://localhost:8080/users';
-  private medicineUrl = 'http://localhost:8080/medicines';
-  private prescriptionUrl = 'http://localhost:8080/prescriptions';
+    private userUrl = '/api/users';
+  private medicineUrl = '/api/medicines';
+  private prescriptionUrl = '/api/prescriptions';
 
   constructor(private http: HttpClient) {}
 

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Prescription, PrescriptionService } from '../../../services/prescription';
 import { AuthService } from '../../../services/auth';
 import { OrderService } from '../../../services/order';
+import { finalize } from 'rxjs';
 
 @Component({
   imports: [CommonModule],
@@ -22,7 +23,8 @@ export class MyPrescriptions implements OnInit {
   constructor(
     private prescriptionService: PrescriptionService,
     private authService: AuthService,
-    private orderService:OrderService
+    private orderService: OrderService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -40,11 +42,16 @@ loadPrescriptions(): void {
 
   this.loading = true;
   this.errorMessage = '';
+  this.changeDetectorRef.markForCheck();
 
-  this.prescriptionService.getUserPrescriptions(account.id).subscribe({
+  this.prescriptionService.getUserPrescriptions(account.id).pipe(
+    finalize(() => {
+      this.loading = false;
+      this.changeDetectorRef.markForCheck();
+    })
+  ).subscribe({
     next: (data) => {
       this.prescriptions = data;
-      this.loading = false;
       console.log('Prescriptions loaded:', data);
     },
     error: (error) => {
@@ -54,10 +61,6 @@ loadPrescriptions(): void {
           ? 'Cannot connect to the backend. Check that Spring Boot is running.'
           : `Failed to load prescriptions. HTTP status: ${error.status}`;
 
-      this.loading = false;
-    },
-    complete: () => {
-      this.loading = false;
     }
   });
 }
@@ -74,6 +77,7 @@ loadPrescriptions(): void {
       error: (error) => {
         console.error('Error approving prescription:', error);
         this.errorMessage = 'Could not approve the prescription.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -90,6 +94,7 @@ loadPrescriptions(): void {
       error: (error) => {
         console.error('Error rejecting prescription:', error);
         this.errorMessage = 'Could not reject the prescription.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -105,6 +110,7 @@ loadPrescriptions(): void {
         `Order #${order.id} placed successfully. Total: R${order.totalAmount.toFixed(2)}`;
 
       this.placingOrderId = null;
+      this.changeDetectorRef.markForCheck();
       this.loadPrescriptions();
     },
     error: (error) => {
@@ -115,6 +121,7 @@ loadPrescriptions(): void {
         'Could not place the order. Please try again.';
 
       this.placingOrderId = null;
+      this.changeDetectorRef.markForCheck();
     }
   });
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Payment, PaymentService } from '../../../services/payment';
 
 @Component({
@@ -12,7 +12,10 @@ export class ManagePayments implements OnInit  {
   payments: Payment[] = [];
   errorMessage = '';
 
-  constructor(private paymentService: PaymentService) {}
+  constructor(
+    private paymentService: PaymentService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadPayments();
@@ -23,10 +26,12 @@ export class ManagePayments implements OnInit  {
       next: (data) => {
         this.payments = data;
         this.errorMessage = '';
+        this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
         console.error('Error loading payments:', error);
         this.errorMessage = 'Could not load payments.';
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

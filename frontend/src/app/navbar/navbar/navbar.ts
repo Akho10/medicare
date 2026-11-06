@@ -10,14 +10,13 @@ import { AuthService } from '../../services/auth';
   templateUrl: './navbar.html',
 })
 export class Navbar {
-
-    constructor(
+  constructor(
     private authService: AuthService,
     private router: Router
   ) { }
 
-  get role():string | null{
-    return this.authService.getRole();
+  get role() {
+    return this.authService.role;
   }
 
   logout():void{

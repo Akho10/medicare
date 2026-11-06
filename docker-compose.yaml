@@ -1,24 +1,53 @@
-version: "3.9"
-
 services:
+  database:
+    image: mysql:8.4
+    container_name: medicare-database
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-medicare_db}
+      MYSQL_USER: ${MYSQL_USER:-medicare}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-medicare_dev_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-medicare_root_dev}
+    volumes:
+      - database-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p\"$${MYSQL_ROOT_PASSWORD}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - fullstack-net
+
   backend:
-    build: ./backend
+    image: ${DOCKERHUB_USERNAME:-local}/medicare-backend:${IMAGE_TAG:-latest}
+    build: ./medicare-backend
     container_name: backend
     ports:
       - "8080:8080"
     environment:
-      - SERVER_PORT=8080
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/${MYSQL_DATABASE:-medicare_db}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-medicare}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-medicare_dev_password}
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - fullstack-net
 
   frontend:
+    image: ${DOCKERHUB_USERNAME:-local}/medicare-frontend:${IMAGE_TAG:-latest}
     build: ./frontend
     container_name: frontend
+    depends_on:
+      - backend
     ports:
-      - "4200:4200"
+      - "${FRONTEND_PORT:-4200}:4200"
     networks:
       - fullstack-net
 
 networks:
   fullstack-net:
     driver: bridge
+
+volumes:
+  database-data:

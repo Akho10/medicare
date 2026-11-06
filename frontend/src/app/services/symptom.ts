@@ -11,7 +11,7 @@ export interface Symptom {
   providedIn: 'root'
 })
 export class SymptomService {
-    private readonly apiUrl = 'http://localhost:8080/symptoms';
+    private readonly apiUrl = '/api/symptoms';
 
   constructor(private http: HttpClient) {}
 
